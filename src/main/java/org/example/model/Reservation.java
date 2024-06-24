@@ -1,38 +1,30 @@
 package org.example.model;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 public class Reservation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "table_id")
-    private Table table;
+    @JoinColumn(name = "table_id", nullable = false)
+    private RestaurantTable table;
 
     private String reservedBy;
     private Date reservationDate;
-    private Date startTime;
-    private Date endTime;
+    private Time startTime;
+    private Time endTime;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
-    public Reservation() {}
+    // Getters and Setters
 
-    public Reservation(Table table, String reservedBy, Date reservationDate, Date startTime, Date endTime) {
-        this.table = table;
-        this.reservedBy = reservedBy;
-        this.reservationDate = reservationDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.status = ReservationStatus.PENDING;
-    }
-
-    // Getters și setters
     public Long getId() {
         return id;
     }
@@ -41,11 +33,11 @@ public class Reservation {
         this.id = id;
     }
 
-    public Table getTable() {
+    public RestaurantTable getTable() {
         return table;
     }
 
-    public void setTable(Table table) {
+    public void setTable(RestaurantTable table) {
         this.table = table;
     }
 
@@ -65,19 +57,19 @@ public class Reservation {
         this.reservationDate = reservationDate;
     }
 
-    public Date getStartTime() {
+    public Time getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(Time startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
 

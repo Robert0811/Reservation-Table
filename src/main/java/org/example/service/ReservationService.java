@@ -1,57 +1,40 @@
 package org.example.service;
 
+import org.example.exception.ReservationException;
 import org.example.model.Reservation;
-import org.example.util.GenericSorter;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import org.example.model.ReservationStatus;
+import org.example.model.RestaurantTable;
 
-import java.util.Comparator;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import java.util.List;
 
 public class ReservationService {
 
-    private SessionFactory factory;
-    private GenericSorter<Reservation> sorter;
+    private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("org.example.jpa");
+    private EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-    public ReservationService() {
-        factory = new Configuration().configure().buildSessionFactory();
-        sorter = new GenericSorter<>();
+    public void addReservation(Reservation reservation) throws ReservationException {
+        if (reservation.getStatus() == null) {
+            reservation.setStatus(ReservationStatus.PENDING);
+        }
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.persist(reservation);
+        transaction.commit();
+    }
+
+    public void cancelReservation(Reservation reservation) throws ReservationException {
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        reservation.setStatus(ReservationStatus.CANCELED);
+        entityManager.merge(reservation);
+        transaction.commit();
     }
 
     public List<Reservation> getAllReservations() {
-        Session session = factory.openSession();
-        List<Reservation> reservationList = session.createQuery("from Reservation", Reservation.class).list();
-        session.close();
-        return reservationList;
-    }
-
-    public void addReservation(Reservation reservation) throws Exception {
-        if (reservation.getStartTime().after(reservation.getEndTime())) {
-            throw new Exception("Start time must be before end time.");
-        }
-
-        Session session = factory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(reservation);
-        transaction.commit();
-        session.close();
-    }
-
-    public void cancelReservation(Reservation reservation) throws Exception {
-        Session session = factory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.delete(reservation);
-        transaction.commit();
-        session.close();
-    }
-
-    public List<Reservation> getReservationsSortedByDate() {
-        return sorter.sort(getAllReservations(), Comparator.comparing(Reservation::getReservationDate));
-    }
-
-    public List<Reservation> getReservationsSortedByStartTime() {
-        return sorter.sort(getAllReservations(), Comparator.comparing(Reservation::getStartTime));
+        return entityManager.createQuery("from Reservation", Reservation.class).getResultList();
     }
 }

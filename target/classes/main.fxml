@@ -18,35 +18,12 @@
     <Label text="Seats:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
     <TextField fx:id="seatsField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-    <Label text="Reserved By:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-    <TextField fx:id="reservedByField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Button text="Add Table" onAction="#handleAddTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
 
-    <Label text="Reservation Date:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-    <DatePicker fx:id="reservationDateField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-    <Label text="Start Time:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-    <TextField fx:id="startTimeField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-
-    <Label text="End Time:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-    <TextField fx:id="endTimeField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-
-    <Button text="Add Table" onAction="#handleAddTable" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-    <Button text="Reserve Table" onAction="#handleReserveTable" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-    <Button text="Cancel Reservation" onAction="#handleCancelReservation" GridPane.rowIndex="6" GridPane.columnIndex="2"/>
-
-    <TableView fx:id="tableView" GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="3">
+    <TableView fx:id="tableView" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
         <columns>
-            <TableColumn text="Table Number" fx:id="tableNumberColumn"/>
-            <TableColumn text="Seats" fx:id="seatsColumn"/>
-        </columns>
-    </TableView>
-
-    <TableView fx:id="reservationTableView" GridPane.rowIndex="8" GridPane.columnIndex="0" GridPane.columnSpan="3">
-        <columns>
-            <TableColumn text="Reserved By" fx:id="reservedByColumn"/>
-            <TableColumn text="Reservation Date" fx:id="reservationDateColumn"/>
-            <TableColumn text="Start Time" fx:id="startTimeColumn"/>
-            <TableColumn text="End Time" fx:id="endTimeColumn"/>
+            <TableColumn fx:id="tableNumberColumn" text="Table Number"/>
+            <TableColumn fx:id="seatsColumn" text="Seats"/>
         </columns>
     </TableView>
 </GridPane>

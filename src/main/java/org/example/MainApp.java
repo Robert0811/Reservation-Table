@@ -12,8 +12,9 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/main.fxml"));
         GridPane root = loader.load();
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setTitle("Hukka Lounge - Table Reservation");
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Hukka Lounge Reservation");
         primaryStage.show();
     }
 
