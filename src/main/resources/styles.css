@@ -1,0 +1,32 @@
+/* styles.css */
+.root {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-background-color: #f0f0f0;
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+}
