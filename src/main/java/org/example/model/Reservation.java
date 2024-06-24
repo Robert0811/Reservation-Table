@@ -18,16 +18,18 @@ public class Reservation {
     private Date startTime;
     private Date endTime;
 
-    // Constructor fără argumente
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
+
     public Reservation() {}
 
-    // Constructor cu argumente
     public Reservation(Table table, String reservedBy, Date reservationDate, Date startTime, Date endTime) {
         this.table = table;
         this.reservedBy = reservedBy;
         this.reservationDate = reservationDate;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.status = ReservationStatus.PENDING;
     }
 
     // Getters și setters
@@ -77,5 +79,13 @@ public class Reservation {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
     }
 }

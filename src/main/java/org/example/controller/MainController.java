@@ -5,14 +5,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.example.exception.ReservationException;
 import org.example.model.Reservation;
 import org.example.model.Table;
 import org.example.service.ReservationService;
 import org.example.service.TableService;
 
-import java.sql.Time;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MainController {
 
@@ -81,33 +83,66 @@ public class MainController {
 
     @FXML
     private void handleAddTable() {
-        int tableNumber = Integer.parseInt(tableNumberField.getText());
-        int seats = Integer.parseInt(seatsField.getText());
-        Table table = new Table(tableNumber, seats);
-        tableService.addTable(table);
-        tableView.setItems(getTableList());
+        try {
+            int tableNumber = Integer.parseInt(tableNumberField.getText());
+            int seats = Integer.parseInt(seatsField.getText());
+            Table table = new Table(tableNumber, seats);
+            tableService.addTable(table);
+            tableView.setItems(getTableList());
+        } catch (NumberFormatException e) {
+            showError("Invalid input for table number or seats.");
+        }
     }
 
     @FXML
     private void handleReserveTable() {
-        Table selectedTable = tableView.getSelectionModel().getSelectedItem();
-        if (selectedTable != null) {
-            String reservedBy = reservedByField.getText();
-            Date reservationDate = Date.valueOf(reservationDateField.getValue());
-            Time startTime = Time.valueOf(startTimeField.getText());
-            Time endTime = Time.valueOf(endTimeField.getText());
-            Reservation reservation = new Reservation(selectedTable, reservedBy, reservationDate, startTime, endTime);
-            reservationService.addReservation(reservation);
-            reservationTableView.setItems(getReservationList());
+        try {
+            if (!isValidTime(startTimeField.getText()) || !isValidTime(endTimeField.getText())) {
+                showError("Invalid time format. Please use HH:mm.");
+                return;
+            }
+            Table selectedTable = tableView.getSelectionModel().getSelectedItem();
+            if (selectedTable != null) {
+                String reservedBy = reservedByField.getText();
+                Date reservationDate = Date.valueOf(reservationDateField.getValue());
+                Time startTime = Time.valueOf(startTimeField.getText() + ":00");
+                Time endTime = Time.valueOf(endTimeField.getText() + ":00");
+                Reservation reservation = new Reservation(selectedTable, reservedBy, reservationDate, startTime, endTime);
+                reservationService.addReservation(reservation);
+                reservationTableView.setItems(getReservationList());
+            }
+        } catch (ReservationException e) {
+            showError(e.getMessage());
+        } catch (Exception e) {
+            showError("Invalid input or other error.");
         }
     }
 
     @FXML
     private void handleCancelReservation() {
-        Reservation selectedReservation = reservationTableView.getSelectionModel().getSelectedItem();
-        if (selectedReservation != null) {
-            reservationService.cancelReservation(selectedReservation);
-            reservationTableView.setItems(getReservationList());
+        try {
+            Reservation selectedReservation = reservationTableView.getSelectionModel().getSelectedItem();
+            if (selectedReservation != null) {
+                reservationService.cancelReservation(selectedReservation);
+                reservationTableView.setItems(getReservationList());
+            }
+        } catch (ReservationException e) {
+            showError(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private boolean isValidTime(String time) {
+        String regex = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$";
+        return time.matches(regex);
     }
 }

@@ -1,19 +1,23 @@
 package org.example.service;
 
 import org.example.model.Table;
+import org.example.util.GenericSorter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class TableService {
 
     private SessionFactory factory;
+    private GenericSorter<Table> sorter;
 
     public TableService() {
         factory = new Configuration().configure().buildSessionFactory();
+        sorter = new GenericSorter<>();
     }
 
     public List<Table> getAllTables() {
@@ -29,5 +33,13 @@ public class TableService {
         session.save(table);
         transaction.commit();
         session.close();
+    }
+
+    public List<Table> getTablesSortedByNumber() {
+        return sorter.sort(getAllTables(), Comparator.comparingInt(Table::getNumber));
+    }
+
+    public List<Table> getTablesSortedBySeats() {
+        return sorter.sort(getAllTables(), Comparator.comparingInt(Table::getSeats));
     }
 }
